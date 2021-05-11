@@ -1,6 +1,8 @@
 import React, {useState} from "react";
 import {useHistory} from "react-router";
 import formatReservationDate from "../utils/format-reservation-date";
+import {today} from "../utils/date-time";
+import ErrorAlert from "../layout/ErrorAlert";
 
 export default function NewReservation(){
 const history = useHistory();
@@ -17,7 +19,28 @@ const history = useHistory();
     }
 
     const [formData, setFormData] = useState(initialFormState)
+    const [wrongDates, setWrongDates] = useState([]);
 
+    function isDateOk(){
+        const reservationDate = new Date(formData.reservation_date);
+        const errorsFound = [];
+        const currentDate = new Date(today())
+
+        if(reservationDate.getUTCDay() === 2){
+            errorsFound.push({message: "Restaurant is closed on Tuesdays"});
+        }
+
+        if(reservationDate < currentDate){
+            errorsFound.push({message: "Making reservations in the past is not allowed"})
+        }
+        setWrongDates(errorsFound);
+
+        if(errorsFound.length > 0 ){
+            return false;
+        }
+
+        return true;
+    }
 
     function handleChange({ target }) {
         setFormData({ ...formData, [target.name]: target.value });
@@ -25,23 +48,31 @@ const history = useHistory();
 
     function handleSubmit(event) {
         event.preventDefault();
-        history.push(`/dashboard?date=${formatReservationDate(formData.reservation_date)}`);
+
+        if(isDateOk()){
+            history.push(`/dashboard?date=${formData.reservation_date}`)
+        }
+    }
+
+    const errors = () => {
+        return wrongDates.map((error, index) => <ErrorAlert key={index} error={error} />)
     }
 
     return(
         <form>
-            <label htmlFor="first_name">First Name</label>
-            <input name="first_name" id="first_name" type="text" value={formData.first_name} onChange={handleChange} required/>
-            <label htmlFor="last_name">Last Name</label>
-            <input name="last_name" id="last_name" type="text" value={formData.last_name} onChange={handleChange} required/>
-            <label htmlFor="mobile_number">Mobile Name</label>
-            <input name="mobile_number" id="mobile_number" type="tel" value={formData.mobile_number} onChange={handleChange} required/>
-            <label htmlFor="reservation_date">Reservation Date</label>
-            <input name="reservation_date" id="reservation_date" type="date" value={formData.reservation_date} onChange={handleChange} required/>
-            <label htmlFor="reservation_time">Reservation Time</label>
-            <input name="reservation_time" id="reservation_time" type="time" value={formData.reservation_time} onChange={handleChange} required/>
-            <label htmlFor="people">Party Size</label>
-            <input name="people" id="people" type="number" onChange={formData.people} value={formData.people} required/>
+            {errors()}
+            <label htmlFor="first_name">First Name</label><br/>
+            <input name="first_name" id="first_name" type="text" value={formData.first_name} onChange={handleChange} required/><br/>
+            <label htmlFor="last_name">Last Name</label><br/>
+            <input name="last_name" id="last_name" type="text" value={formData.last_name} onChange={handleChange} required/><br/>
+            <label htmlFor="mobile_number">Mobile Name</label><br/>
+            <input name="mobile_number" id="mobile_number" type="tel" value={formData.mobile_number} onChange={handleChange} required/><br/>
+            <label htmlFor="reservation_date">Reservation Date</label><br/>
+            <input name="reservation_date" id="reservation_date" type="date" value={formData.reservation_date} onChange={handleChange} required/><br/>
+            <label htmlFor="reservation_time">Reservation Time</label><br/>
+            <input name="reservation_time" id="reservation_time" type="time" value={formData.reservation_time} onChange={handleChange} required/><br/>
+            <label htmlFor="people">Party Size</label><br/>
+            <input name="people" id="people" type="number" onChange={formData.people} value={formData.people} required/><br/>
             <button type="submit" onClick={handleSubmit}>Submit</button>
             <button type="button" onClick={history.goBack}>Cancel</button>
         </form>
