@@ -37,7 +37,7 @@ function hasProps(req, res, next){
     else{
         return next({
             status: 400,
-            message: "Four"
+            message: "Four hundred"
         })
     }
 }

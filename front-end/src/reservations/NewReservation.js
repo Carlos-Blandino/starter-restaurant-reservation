@@ -6,71 +6,88 @@ import ErrorAlert from "../layout/ErrorAlert";
 import { createReservation } from "../utils/api"
 
 export default function NewReservation(){
-const history = useHistory();
-
     const initialFormData = () => {
-         return {
-                first_name: "",
-                last_name: "",
-                mobile_number: "",
-                reservation_date: "",
-                reservation_time: "",
-                people: 1,
+        return {
+            first_name: "",
+            last_name: "",
+            mobile_number: "",
+            reservation_date: "",
+            reservation_time: "",
+            people: 1,
+        }
+    }
+        const history = useHistory();
+        const [errors, setErrors] = useState([]);
+        const [formData, setFormData] = useState({...initialFormData() });
+
+        function handleChange({ target }) {
+            setFormData({ ...formData, [target.name]: target.value });
+        }
+
+       async function handleSubmit(event) {
+
+            event.preventDefault();
+
+            const foundErrors = [];
+
+            if(validateFields(foundErrors) && validateDate(foundErrors)) {
+                await createReservation(formData)
+                    .then((res) => history.push(`/dashboard?date=${formData.reservation_date}`))
+                setFormData({...initialFormData})
+               // history.push(`/dashboard?date=${formData.reservation_date}`);
             }
-    }
 
-    const [formData, setFormData] = useState({...initialFormData})
-    const [wrongDates, setWrongDates] = useState([]);
-
-    function isDateOk(){
-        const reservationDate = new Date(formData.reservation_date);
-        const errorsFound = [];
-        const currentDate = new Date(today())
-
-        if(reservationDate.getUTCDay() === 2){
-            errorsFound.push({message: "Restaurant is closed on Tuesdays"});
+            setErrors(foundErrors);
         }
 
-        if(reservationDate < currentDate){
-            errorsFound.push({message: "Making reservations in the past is not allowed"})
+
+        function validateFields(foundErrors) {
+            for(const field in formData) {
+                if(formData[field] === "") {
+                    foundErrors.push({ message: `${field.split("_").join(" ")} cannot be left blank.`})
+                }
+            }
+            if(foundErrors.length > 0) {
+                return false;
+            }
+            return true;
         }
-        setWrongDates(errorsFound);
 
-        if(errorsFound.length > 0 ){
-            return false;
+        function validateDate(foundErrors) {
+            const reserveDate = new Date(`${formData.reservation_date}T${formData.reservation_time}:00.000`);
+            const todaysDate = new Date();
+
+            if(reserveDate.getDay() === 2) {
+                foundErrors.push({ message: "Restaurant is closed on Tuesdays." });
+            }
+
+            if(reserveDate < todaysDate) {
+                foundErrors.push({ message: "Date is in the past." });
+            }
+
+            if(reserveDate.getHours() < 10 || (reserveDate.getHours() === 10 && reserveDate.getMinutes() < 30)) {
+                foundErrors.push({ message: "Restaurant is not open until 10:30AM." });
+            }
+            else if(reserveDate.getHours() > 22 || (reserveDate.getHours() === 22 && reserveDate.getMinutes() >= 30)) {
+                foundErrors.push({ message: "Restaurant is closed after 10:30PM." });
+            }
+            else if(reserveDate.getHours() > 21 || (reserveDate.getHours() === 21 && reserveDate.getMinutes() > 30)) {
+                foundErrors.push({ message: "Reservation must be made at least an hour before closing (10:30PM)." })
+            }
+
+            if(foundErrors.length > 0) {
+                return false;
+            }
+            return true;
         }
 
-        return true;
-    }
-
-    function handleChange({ target }) {
-        setFormData({ ...formData, [target.name]: target.value });
-    }
-
-   async function handleSubmit(event) {
-        event.preventDefault();
-
-        if(isDateOk()){
-            await createReservation(formData).then((res) => history.push(`/dashboard?date=${formData.reservation_date}`))
-            setFormData({...initialFormData})
-            //history.push(`/dashboard?date=${formData.reservation_date}`)
+        const displayErrors = () => {
+            return errors.map((error, idx) => <ErrorAlert key={idx} error={error} />);
         }
-    }
-
-    const errors = () => {
-        return wrongDates.map((error, index) => <ErrorAlert key={index} error={error} />)
-    }
-
-    // const handleCancel = (event) => {
-    //     event.preventDefault();
-    //     setFormData({ ...initialFormData });
-    //     //Check to see this is what is wanted
-    //     history.push("/dashboard");
-    // };
 
     return(
         <form>
-            {errors()}
+            {displayErrors()}
             <label htmlFor="first_name">First Name</label><br/>
             <input name="first_name" id="first_name" type="text" value={formData.first_name} onChange={handleChange} required/><br/>
             <label htmlFor="last_name">Last Name</label><br/>
@@ -82,7 +99,7 @@ const history = useHistory();
             <label htmlFor="reservation_time">Reservation Time</label><br/>
             <input name="reservation_time" id="reservation_time" type="time" value={formData.reservation_time} onChange={handleChange} required/><br/>
             <label htmlFor="people">Party Size</label><br/>
-            <input name="people" id="people" type="number" onChange={formData.people} value={formData.people} min="1" max="6" required/><br/>
+            <input name="people" id="people" type="number" onChange={formData.people} defaultValue="1" value={formData.people} min="1" max="6" required/><br/>
             <button type="submit" onClick={handleSubmit}>Submit</button>
             <button type="button" onClick={history.goBack}>Cancel</button>
         </form>
