@@ -3,22 +3,23 @@ import {useHistory} from "react-router";
 import formatReservationDate from "../utils/format-reservation-date";
 import {today} from "../utils/date-time";
 import ErrorAlert from "../layout/ErrorAlert";
+import { createReservation } from "../utils/api"
 
 export default function NewReservation(){
 const history = useHistory();
 
-    const initialFormState = () => {
+    const initialFormData = () => {
          return {
                 first_name: "",
                 last_name: "",
                 mobile_number: "",
                 reservation_date: "",
                 reservation_time: "",
-                people: 0,
+                people: 1,
             }
     }
 
-    const [formData, setFormData] = useState(initialFormState)
+    const [formData, setFormData] = useState({...initialFormData})
     const [wrongDates, setWrongDates] = useState([]);
 
     function isDateOk(){
@@ -46,17 +47,26 @@ const history = useHistory();
         setFormData({ ...formData, [target.name]: target.value });
     }
 
-    function handleSubmit(event) {
+   async function handleSubmit(event) {
         event.preventDefault();
 
         if(isDateOk()){
-            history.push(`/dashboard?date=${formData.reservation_date}`)
+            await createReservation(formData).then((res) => history.push("/dashboard"))
+            setFormData({...initialFormData})
+            //history.push(`/dashboard?date=${formData.reservation_date}`)
         }
     }
 
     const errors = () => {
         return wrongDates.map((error, index) => <ErrorAlert key={index} error={error} />)
     }
+
+    // const handleCancel = (event) => {
+    //     event.preventDefault();
+    //     setFormData({ ...initialFormData });
+    //     //Check to see this is what is wanted
+    //     history.push("/dashboard");
+    // };
 
     return(
         <form>
