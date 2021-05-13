@@ -51,7 +51,7 @@ const history = useHistory();
         event.preventDefault();
 
         if(isDateOk()){
-            await createReservation(formData).then((res) => history.push("/dashboard"))
+            await createReservation(formData).then((res) => history.push(`/dashboard?date=${formData.reservation_date}`))
             setFormData({...initialFormData})
             //history.push(`/dashboard?date=${formData.reservation_date}`)
         }
@@ -82,7 +82,7 @@ const history = useHistory();
             <label htmlFor="reservation_time">Reservation Time</label><br/>
             <input name="reservation_time" id="reservation_time" type="time" value={formData.reservation_time} onChange={handleChange} required/><br/>
             <label htmlFor="people">Party Size</label><br/>
-            <input name="people" id="people" type="number" onChange={formData.people} value={formData.people} required/><br/>
+            <input name="people" id="people" type="number" onChange={formData.people} value={formData.people} min="1" max="6" required/><br/>
             <button type="submit" onClick={handleSubmit}>Submit</button>
             <button type="button" onClick={history.goBack}>Cancel</button>
         </form>
