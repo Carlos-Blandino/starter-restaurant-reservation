@@ -13,7 +13,7 @@ export default function NewReservation(){
             mobile_number: "",
             reservation_date: "",
             reservation_time: "",
-            people: 1,
+            people: 0,
         }
     }
         const history = useHistory();
@@ -34,7 +34,6 @@ export default function NewReservation(){
                 await createReservation(formData)
                     .then((res) => history.push(`/dashboard?date=${formData.reservation_date}`))
                 setFormData({...initialFormData})
-               // history.push(`/dashboard?date=${formData.reservation_date}`);
             }
 
             setErrors(foundErrors);
@@ -50,6 +49,11 @@ export default function NewReservation(){
             if(foundErrors.length > 0) {
                 return false;
             }
+
+            if(formData.people <= 0) {
+                foundErrors.push({ message: "Minimum party size is 1." })
+            }
+
             return true;
         }
 
@@ -99,7 +103,7 @@ export default function NewReservation(){
             <label htmlFor="reservation_time">Reservation Time</label><br/>
             <input name="reservation_time" id="reservation_time" type="time" value={formData.reservation_time} onChange={handleChange} required/><br/>
             <label htmlFor="people">Party Size</label><br/>
-            <input name="people" id="people" type="number" onChange={formData.people} defaultValue="1" value={formData.people} min="1" max="6" required/><br/>
+            <input name="people" id="people" type="number" onChange={handleChange}  min="0" max="6"  value={formData.people} /><br/>
             <button type="submit" onClick={handleSubmit}>Submit</button>
             <button type="button" onClick={history.goBack}>Cancel</button>
         </form>

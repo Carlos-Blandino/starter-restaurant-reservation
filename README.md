@@ -151,7 +151,6 @@ You can use the screenshots to debug your code by rendering additional informati
 The Product Manager has already created the user stories for _Periodic Tables_. Each of the user stories is listed below, and your Product Manager wants them to be implemented in the order in which they are listed. Another developer has already written the tests for each of the user stories so that you don't have to.
 
 Although the user stories do not say anything about deployment, you should consider deploying early and often. You may even decide to deploy before adding any features. Since this is a monorepo, you can follow the instructions in [this Vercel article on monorepos](https://vercel.com/blog/monorepos) to deploy this project.
-
 ### US-01 Create and list reservations
 
 As a restaurant manager<br/>

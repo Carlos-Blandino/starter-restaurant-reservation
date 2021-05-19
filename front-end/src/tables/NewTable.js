@@ -60,7 +60,6 @@ export default function NewTable() {
                 type="number"
                 min="1"
                 max="6"
-                defaultValue="1"
                 onChange={handleChange}
                 value={formData.capacity}
                 required
