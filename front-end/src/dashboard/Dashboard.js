@@ -12,12 +12,9 @@ import DashboardTableItem from "../dashboard-table-item/dashboardTableItem";
  * @returns {JSX.Element}
  */
 function Dashboard({date, reservations, reservationsError, tables, tablesError}) {
-
     const history = useHistory();
-   
-
+    date=date ? date : today()
     useEffect(loadDashboardTable);
-
     function loadDashboardTable() {
         //fetch the table data
     }
@@ -26,12 +23,11 @@ function Dashboard({date, reservations, reservationsError, tables, tablesError})
         <main>
             <h1>Dashboard</h1>    
             <div><br/>
-            
             <button type="button" onClick={() => history.push(`/dashboard?date=${previous(date)}`)}>Previous
             </button>
             <button type="button" onClick={() => history.push(`/dashboard?date=${today()}`)}>Today</button>
             <button type="button" onClick={() => history.push(`/dashboard?date=${next(date)}`)}>Next</button>
-            </div>
+            </div><br/>
             <div className="d-md-flex mb-3">
                 <h4 className="mb-0">Reservations for date {date}</h4>
               
