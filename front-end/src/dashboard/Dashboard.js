@@ -1,84 +1,62 @@
-import React, {useEffect, useState} from "react";
-import {listReservations} from "../utils/api";
+import React from "react";
 import ErrorAlert from "../layout/ErrorAlert";
-import {previous, next, today} from "../utils/date-time";
-import {useHistory, useParams} from "react-router";
-import  DashboardItem  from "../DashboardItem/DashboardItem";
-import DashboardTableItem from "../dashboard-table-item/dashboardTableItem";
+import { useHistory } from "react-router-dom";
+import { next, previous, today } from "../utils/date-time";
+import ReservationTable from "./ReservationTable";
+import RestaurantTable from "./RestaurantTable";
+
 /**
  * Defines the dashboard page.
  * @param date
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-function Dashboard({date, reservations, reservationsError, tables, tablesError}) {
+function Dashboard({
+                       reservations,
+                       tables,
+                       reservationsError,
+                       tablesError,
+                       date,
+                       loadTables,
+                       renderReservations,
+                   }) {
     const history = useHistory();
-    date=date ? date : today()
-    useEffect(loadDashboardTable);
-    function loadDashboardTable() {
-        //fetch the table data
-    }
+
+    const handleDateChange = (newDate) => {
+        history.push(`/dashboard?date=${newDate}`);
+    };
 
     return (
         <main>
-            <h1>Dashboard</h1>    
-            <div><br/>
-            <button type="button" onClick={() => history.push(`/dashboard?date=${previous(date)}`)}>Previous
-            </button>
-            <button type="button" onClick={() => history.push(`/dashboard?date=${today()}`)}>Today</button>
-            <button type="button" onClick={() => history.push(`/dashboard?date=${next(date)}`)}>Next</button>
-            </div><br/>
-            <div className="d-md-flex mb-3">
-                <h4 className="mb-0">Reservations for date {date}</h4>
-              
-          
+            <h1>Dashboard</h1>
+            <div className={"dashboard"}>
+                <div>
+                    <h4>Reservations for {date}</h4>
+                </div>
+                <div>
+                    <button onClick={() => handleDateChange(previous(date))} className="btn btn-primary dashboardButton">
+                        Previous
+                    </button>
+                    <button onClick={() => handleDateChange(today())} className="btn btn-primary dashboardButton">
+                        Today
+                    </button>
+                    <button onClick={() => handleDateChange(next(date))} className="btn btn-primary dashboardButton">
+                        Next
+                    </button>
+                </div>
             </div>
-            <ErrorAlert error={reservationsError}/>
-            <table class="table">
-		
-			<thead>
-			
-				<tr>
-					<th scope="col">ID</th>
-					<th scope="col">First Name</th>
-					<th scope="col">Last Name</th>
-					<th scope="col">Mobile Number</th>
-					<th scope="col">Time</th>
-					<th scope="col">People</th>
-					<th scope="col">Status</th>
-					<th scope="col">Seat Table</th>
-				</tr>
-			</thead>
-			
-			<tbody>
-        
-                <DashboardItem date={date} reservations={reservations}/>
-            
-			</tbody>
 
-            </table>
+            {/* Reservation Data */}
+            <ErrorAlert error={reservationsError} />
+            <ReservationTable reservations={reservations} renderReservations={renderReservations} />
 
-            <h4 className="mb-0">Tables</h4>
-
-		<ErrorAlert error={tablesError} />
-
-		<table class="table">
-
-			<thead>
-				<tr>
-					<th scope="col">ID</th>
-					<th scope="col">Table Name</th>
-					<th scope="col">Capacity</th>
-					<th scope="col">Status</th>
-				</tr>
-			</thead>
-				
-			<tbody>
-				<DashboardTableItem tables={tables}/>
-			</tbody>
-
-		</table>
-
+            {/*Tables Data*/}
+            <ErrorAlert error={tablesError} />
+            <RestaurantTable
+                tables={tables}
+                loadTables={loadTables}
+                renderReservations={renderReservations}
+            />
         </main>
     );
 }

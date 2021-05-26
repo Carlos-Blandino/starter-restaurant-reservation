@@ -345,26 +345,26 @@ so that I can see which reservation parties are seated, and finished reservation
 ### US-07 Search for a reservation by phone number
 
 As a restaurant manager<br/>
-I want to search for a reservation by phone number (partial or complete)<br/>
+I want to phoneLookup for a reservation by phone number (partial or complete)<br/>
 so that I can quickly access a customer's reservation when they call about their reservation.<br/>
 
 #### Acceptance Criteria
 
-1. The `/search` page will
-   - Display a search box `<input name="mobile_number" />` that displays the placeholder text: "Enter a customer's phone number"
-   - Display a "Find" button next to the search box.
+1. The `/phoneLookup` page will
+   - Display a phoneLookup box `<input name="mobile_number" />` that displays the placeholder text: "Enter a customer's phone number"
+   - Display a "Find" button next to the phoneLookup box.
    - Clicking on the "Find" button will submit a request to the server (e.g. GET `/reservations?mobile_phone=555-1212`).
-     - then the system will look for the reservation(s) in the database and display all matched records on the `/search` page using the same reservations list component as the `/dashboard` page.
-     - the search page will display all reservations matching the phone number, regardless of status.
+     - then the system will look for the reservation(s) in the database and display all matched records on the `/phoneLookup` page using the same reservations list component as the `/dashboard` page.
+     - the phoneLookup page will display all reservations matching the phone number, regardless of status.
    - display `No reservations found` if there are no records found after clicking the Find button.
 
-> **Hint** To search for a partial or complete phone number, you should ignore all formatting and search only for the digits.
+> **Hint** To phoneLookup for a partial or complete phone number, you should ignore all formatting and phoneLookup only for the digits.
 > You will need to remove any non-numeric characters from the submitted mobile number and also use the PostgreSQL translate function.
 >
-> The following function will perform the correct search.
+> The following function will perform the correct phoneLookup.
 >
 > ```javascript
-> function search(mobile_number) {
+> function phoneLookup(mobile_number) {
 >   return knex("reservations")
 >     .whereRaw(
 >       "translate(mobile_number, '() -', '') like ?",
@@ -382,7 +382,7 @@ so that reservations are accurate and current.
 
 #### Acceptance Criteria
 
-1. The `/dashboard` and the `/search` page will
+1. The `/dashboard` and the `/phoneLookup` page will
    - Display an "Edit" button next to each reservation
      - Clicking the "Edit" button will navigate the user to the `/reservations/:reservation_id/edit` page
    - the "Edit" button must be a link with an `href` attribute that equals `/reservations/${reservation_id}/edit`, so it can be found by the tests.
