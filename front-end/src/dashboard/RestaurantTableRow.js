@@ -12,7 +12,7 @@ function RestaurantTableRow({ table, onRestoreTableHandler }){
             </td>
             <td>
                 {reservation_id ? (
-                    <button onClick={() => onRestoreTableHandler(table_id, reservation_id)} data-table-id-finish={table_id}>
+                    <button className="btn btn-danger" onClick={() => onRestoreTableHandler(table_id, reservation_id)} data-table-id-finish={table_id}>
                         Finish
                     </button>
                 ) : null}
