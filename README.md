@@ -1,4 +1,5 @@
-#Periodic Table: A Restaurant Reservation System
+# Periodic Table: A Restaurant Reservation System
+
 Thank you for taking a look at my work. This app is designed to help users in a restaurant setting manage reservations for their customers.
 
 
@@ -16,7 +17,7 @@ Thank you for taking a look at my work. This app is designed to help users in a 
 
 
 
-##Application's Functional Summary:
+## Application's Functional Summary:
   
   The Dashboard is the entry point of the online application. A restaurants reservations are listed by date, which the user is able to change,
   create and edit.
@@ -27,11 +28,11 @@ Thank you for taking a look at my work. This app is designed to help users in a 
   Lastly, the user has the ability to Cancel a reservation.
   
   
-##Technology in play:
+## Technology in play:
   The frontend was developed with HTML5, CSS3, Javascript, Bootstrap, and React. For the backend, I used Nodejs, Express, and Knex.
 
 
-##Basic Installation 
+## Basic Installation 
 1. Fork and clone this repository.
 1. Run `cp ./back-end/.env.sample ./back-end/.env`.
 1. Update the `./back-end/.env` file with the connection URL's to your  database instance.
@@ -55,7 +56,7 @@ The table below describes the folders in this starter repository:
 
 
 
-##API
+## API
 
 | Endpoint                               | Method | Description                                                                                           |
 | -------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------- |
