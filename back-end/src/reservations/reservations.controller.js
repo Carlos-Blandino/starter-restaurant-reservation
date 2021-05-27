@@ -45,6 +45,7 @@ function isReservationValid(req, res, next) {
             }
         }
     }
+
     next();
 }
 
@@ -147,7 +148,7 @@ async function reservationExists(req, res, next) {
 }
 
 async function isStatusValid(req, res, next) {
-    const newReservation = req.body.data;
+
     const {status} = req.body.data;
 
     const validOptions = ["booked", "seated", "finished", "cancelled"];
@@ -196,7 +197,7 @@ async function update(req, res, next) {
 
 module.exports = {
     list: [asyncErrorBoundary(list)],
-    create: [isReservationValid, isTimeAndDateValid, isPeopleCountValid, isSeatStatusValid, asyncErrorBoundary(create)],
+    create: [isReservationValid, isSeatStatusValid,isTimeAndDateValid, isPeopleCountValid,  asyncErrorBoundary(create)],
     read: [asyncErrorBoundary(reservationExists), read],
     updateReservationStatus: [
         asyncErrorBoundary(reservationExists),
@@ -205,10 +206,12 @@ module.exports = {
     ],
     update: [
         asyncErrorBoundary(reservationExists),
+
         isReservationValid,
+        isSeatStatusValid,
         isTimeAndDateValid,
         isPeopleCountValid,
-        isSeatStatusValid,
+
         asyncErrorBoundary(update),
     ],
 };
