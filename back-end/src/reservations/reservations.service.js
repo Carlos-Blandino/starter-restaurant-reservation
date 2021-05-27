@@ -56,7 +56,7 @@ module.exports = {
     list,
     create,
     read,
-    updateReservationAfterTableReset,
+    updateReservationAfterTableReset: updateReservationAfterTableReset,
     phoneLookup,
     update,
 };
