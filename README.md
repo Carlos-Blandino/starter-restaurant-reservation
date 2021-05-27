@@ -19,7 +19,7 @@ Thank you for taking a look at my work. This app is designed to help users in a 
 
 ## Application's Functional Summary:
   
-  The Dashboard is the entry point of the online application. A restaurants reservations are listed by date, which the user is able to change,
+  The Dashboard is the entry point of the online application. A restaurant's reservations are listed by date, which the user is able to change,
   create and edit.
   The user is able to create custom tables for seating parties of any size by utilizing the Create Table screen.
   The main task of assigning a table is performed by going to the Dashboard screen and clicking the seat button.
@@ -29,7 +29,7 @@ Thank you for taking a look at my work. This app is designed to help users in a 
   
   
 ## Technology in play:
-  The frontend was developed with HTML5, CSS3, Javascript, Bootstrap, and React. For the backend, I used Nodejs, Express, and Knex.
+  The frontend was developed with HTML5, CSS3, Javascript, Bootstrap, and React. For the backend, I used Node.js, Express, and Knex.
 
 
 ## Basic Installation 
