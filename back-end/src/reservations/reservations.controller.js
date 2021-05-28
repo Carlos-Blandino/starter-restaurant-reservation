@@ -70,6 +70,8 @@ function isTimeAndDateValid(req, res, next) {
     const todayDate = new Date();
     const hours = date.getHours();
     const minutes = date.getMinutes();
+    const dateFormat = /\d\d\d\d-\d\d-\d\d/;
+    const dateIsValid = newReservation.reservation_date.match(dateFormat)?.length > 0;
 
     if (isNaN(timeStamp)) {
         return next({
@@ -85,7 +87,7 @@ function isTimeAndDateValid(req, res, next) {
         });
     }
 
-    if (date.getDay() === 2) {
+    if (dateIsValid && date.getDay() === 2) {
         return next({
             status: 400,
             message: "The restaurant is closed on Tuesdays",
@@ -148,11 +150,8 @@ async function reservationExists(req, res, next) {
 }
 
 async function isStatusValid(req, res, next) {
-
     const {status} = req.body.data;
-
     const validOptions = ["booked", "seated", "finished", "cancelled"];
-
     if (!validOptions.includes(status)) {
         return next({
             status: 400,
@@ -166,7 +165,6 @@ async function isStatusValid(req, res, next) {
             message: `Reservation is finished and can't be updated.`,
         });
     }
-
     next();
 }
 
@@ -197,7 +195,7 @@ async function update(req, res, next) {
 
 module.exports = {
     list: [asyncErrorBoundary(list)],
-    create: [isReservationValid, isSeatStatusValid,isTimeAndDateValid, isPeopleCountValid,  asyncErrorBoundary(create)],
+    create: [isReservationValid,isTimeAndDateValid, isPeopleCountValid, isSeatStatusValid, asyncErrorBoundary(create)],
     read: [asyncErrorBoundary(reservationExists), read],
     updateReservationStatus: [
         asyncErrorBoundary(reservationExists),
@@ -206,12 +204,10 @@ module.exports = {
     ],
     update: [
         asyncErrorBoundary(reservationExists),
-
         isReservationValid,
-        isSeatStatusValid,
         isTimeAndDateValid,
         isPeopleCountValid,
-
+        isSeatStatusValid,
         asyncErrorBoundary(update),
     ],
 };
